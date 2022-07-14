@@ -8,6 +8,7 @@
 #include <stdlib.h>  // malloc()   free()
 #include <stdarg.h>  // va_start    va_end   va_list
 #include <time.h>    // time()   localtime()   tzset()   strftime()
+#include <wchar.h>     /* wprintf() */
 
 #define log(...) _log(__VA_ARGS__)
 

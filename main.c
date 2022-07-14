@@ -4,6 +4,14 @@
 #include <errno.h>
 #include "logging.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#include <fcntl.h>     /* _O_U8TEXT _O_U16TEXT  _setmode() */
+#else
+#include <wchar.h>     /* wprintf() */
+#include <locale.h>    /* setlocale()   LC_ALL */
+#endif /* _WIN32 */
+
 int initConsoleColors();
 
 int main()
@@ -19,14 +27,6 @@ int main()
     wprintf(L"\x1b[93mERROR CODE RETURNED : %lu\x1b[0m\n", errno);
     return errno;
 }
-
-#ifdef _WIN32
-#include <windows.h>
-#include <fcntl.h>     /* _O_U8TEXT _O_U16TEXT  _setmode() */
-#else
-#include <wchar.h>     /* wprintf() */
-#include <locale.h>    /* setlocale()   LC_ALL */
-#endif /* _WIN32 */
 
 int initConsoleColors()
 {
