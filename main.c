@@ -1,39 +1,36 @@
+
 /* gcc -m64 -Os -static main.c -o test -s */
 
-#ifdef _WIN32
-#include <windows.h>   /* HANDLE  STD_OUTPUT_HANDLE  INVALID_HANDLE_VALUE  DWORD
-                          GetConsoleMode()    SetConsoleMode()    GetLastError()  */
-#include <fcntl.h>     /* _O_U8TEXT _O_U16TEXT  _setmode() */
-#include <stdio.h>     /* stdout  _fileno  wprintf() sleep() */
-#define sleep(x) Sleep(x * 1000)
-#else
-#include <wchar.h>     /* wprintf() */
-#include <locale.h>    /* setlocale()   LC_ALL */
-#include <unistd.h>    /* sleep() */
-#endif /* _WIN32 */
-
 #include <errno.h>
-
 #include "logging.h"
 
 int initConsoleColors();
 
 int main()
 {
+    log("INFO : Initializing ... ");
     if(initConsoleColors())
     {
-        log("INFO : Colors Initialized.");
-        wprintf(L"\x1b[94m\u2591\u2592\u2593\x1b[0m\n");
+        log("INFO : Done.");
+        wprintf(L"\x1b[33mINFO \x1b[39m: \x1b[94mWe have Virtual Terminal Sequences with color !\x1b[0m\n");
+    } else {
+        log("ERROR : Unable to initialize Virtual Terminal Sequence.");
     }
-    sleep(1);
-    log("INFO : Program Closed.");
-    wprintf(L"\x1b[93mLAST ERROR CODE : %lu\x1b[0m\n", errno);
+    wprintf(L"\x1b[93mERROR CODE RETURNED : %lu\x1b[0m\n", errno);
     return errno;
 }
 
+#ifdef _WIN32
+#include <windows.h>
+#include <fcntl.h>     /* _O_U8TEXT _O_U16TEXT  _setmode() */
+#else
+#include <wchar.h>     /* wprintf() */
+#include <locale.h>    /* setlocale()   LC_ALL */
+#endif /* _WIN32 */
+
 int initConsoleColors()
 {
-#ifdef _WIN32
+#ifdef _WIN64
     _setmode(_fileno(stdout), _O_U8TEXT);
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if(hOut != INVALID_HANDLE_VALUE)
@@ -49,7 +46,7 @@ int initConsoleColors()
             return -1;
         }
         log("INFO : initConsoleColors working.");
-        wprintf(L"\x1b[91mINFO : initConsoleColors working\x1b[0m\n");
+        wprintf(L"\x1b[36mINFO \x1b[39m: \x1b[91minitConsoleColors working\x1b[0m\n");
         errno = 0;
         return 1;
     } else {
@@ -59,9 +56,8 @@ int initConsoleColors()
     }
 #else
     setlocale(LC_ALL, "en_US.utf8");
-#endif /* _WIN32 */
+#endif /* _WIN64 */
     log("INFO : initConsoleColors working.");
-    wprintf(L"\x1b[91mINFO : initConsoleColors working.\x1b[0m\n");
+    wprintf(L"\x1b[36mINFO \x1b[39m: \x1b[91minitConsoleColors working.\x1b[0m\n");
     return 1;
 }
-
