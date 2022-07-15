@@ -21,10 +21,11 @@ int main()
     {
         log("INFO : Done.");
         wprintf(L"\x1b[33mINFO \x1b[39m: \x1b[94mWe have Virtual Terminal Sequences with color !\x1b[0m\n");
+        wprintf(L"\x1b[93mERROR CODE RETURNED : %lu\x1b[0m\n", errno);
     } else {
         log("ERROR : Unable to initialize Virtual Terminal Sequence.");
+        wprintf(L"ERROR CODE RETURNED : %lu\n", errno);
     }
-    wprintf(L"\x1b[93mERROR CODE RETURNED : %lu\x1b[0m\n", errno);
     return errno;
 }
 
