@@ -9,6 +9,7 @@
 #include <stdarg.h>  // va_start    va_end   va_list
 #include <time.h>    // time()   localtime()   tzset()   strftime()
 #include <wchar.h>     /* wprintf() Added for linux */
+#include <errno.h>  // errno
 
 #define log(...) _log(__VA_ARGS__)
 
@@ -33,6 +34,10 @@ void _log(const char* fmt, ...)
         wprintf(L"ERROR : Unable to create log file !!\n");
 
     } else {
+        if(errno == 22)
+        {
+            errno = 0;
+        }
         free(fileName);
         va_list ap;
         strftime(datestr, sizeof(datestr) - 1,  "%b/%d/%Y  %H:%M", localtime(&t));
